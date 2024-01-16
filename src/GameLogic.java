@@ -1,6 +1,7 @@
 public class GameLogic {
     BoardPanel panel;
 
+    int repeat = 0;
     int [][] boardCopy;
 
     public GameLogic (BoardPanel panel)
@@ -11,6 +12,56 @@ public class GameLogic {
     public void accessArray ()
     {
         boardCopy = panel.returnBoard();
+    }
+
+    public boolean check_valid ()
+    {
+        return validity_check();
+    }
+
+    public boolean validity_check ()
+    {
+        for (int i = 0; i < boardCopy.length; i++)
+        {
+            for (int j = 0; j < boardCopy[0].length; j++)
+            {
+                if (boardCopy[i][j] == 0)
+                    continue;
+                if(!check_cross(i, j, boardCopy[i][j]))
+                {
+                    System.out.println(String.format("Found Error at row:%d col:%d", i+1, j+1));
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean check_cross (int row, int col, int value)
+    {
+        for (int i = 0; i < 9; i++) {
+            if (row != i && boardCopy[i][col] == value)
+                return false;
+        }
+        for (int i = 0; i < 9; i++) {
+            if (col != i && boardCopy[row][i] == value)
+                return false;
+        }
+        int startingCol = col - (col % 3);
+        //Takes current row# and subtracts the remainder of row# / 3
+        int startingRow = row - (row % 3);
+        //Figures out which 9x9 square the index is currently in
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if ((i + startingRow) != row && (j + startingCol) != col && boardCopy[i + startingRow][j + startingCol] == value)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public boolean solve (int row, int col)
@@ -64,7 +115,7 @@ public class GameLogic {
 
     public boolean checkRow (int row, int num)
     {
-        for (int col = 0; col <= 8; col++)
+        for (int col = 0; col < 9; col++)
         {
             if (boardCopy[row][col] == num)
             {
@@ -76,7 +127,7 @@ public class GameLogic {
 
     public boolean checkCol (int col, int num)
     {
-        for (int row = 0; row <= 8; row++)
+        for (int row = 0; row < 9; row++)
         {
             if (boardCopy[row][col] == num)
             {

@@ -67,9 +67,20 @@ public class BoardPanel extends JPanel implements Runnable {
     public void start () {
         //Create an initial check to see if board is valid
         logic.accessArray();
-        solved = logic.solve(0,0);
+        if (logic.check_valid())
+        {
+            solved = logic.solve(0,0);
+        }
+        else
+        {
+            solved = false;
+        }
         if (solved) {
             System.out.println("Done!");
+        }
+        else
+        {
+            System.out.println("Invalid Board!");
         }
     }
 
@@ -156,7 +167,7 @@ public class BoardPanel extends JPanel implements Runnable {
     {
         //draws the number inside the 2d array
         int fontSize = 40;
-        Font f = new Font("Comic Sans MS", Font.BOLD, fontSize);
+        Font f = new Font("SansSerif.plain", Font.BOLD, fontSize);
         g.setColor(Color.black);
         g.setFont(f);
         for (int i = 0; i < boardValues.length; i++)
